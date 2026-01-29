@@ -19,7 +19,7 @@ class UsersController {
             $phone = $_POST['phone'];
             $address = $_POST['address'];
             $role = 'user';
-            $password = $_POST['password']; // plain text поки
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
             // Додаємо користувача
             $this->userModel->addUser($name, $email, $phone, $address, $role, $password);
@@ -51,7 +51,7 @@ class UsersController {
 
             $user = $this->userModel->getByEmail($email);
 
-            if ($user && $password === $user['password']) {
+            if ($user && password_verify($password, $user['password'])) {
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }

@@ -40,7 +40,7 @@ class WishlistController {
     try {
         $added = $this->wishlist->add($userId, $productId);
         if ($added) {
-            echo json_encode(['success' => true, 'message' => 'Товар додано у wishlist 💖']);
+            echo json_encode(['success' => true, 'message' => 'Товар додано у wishlist']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Товар вже у wishlist']);
         }
