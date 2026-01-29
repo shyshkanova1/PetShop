@@ -1,0 +1,16 @@
+{
+    "name": "marina/petshop",
+    "description": "Pet Shop project with PDO and ORM",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mshyshkanova",
+            "email": "marina.shyshkanova@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "illuminate/database": "^12.46"
+    }
+}
