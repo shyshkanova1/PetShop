@@ -39,88 +39,107 @@ class ProductsController {
     /* =======================
        Додавання товару
     ======================== */
-    public function add() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'] ?? '';
-            $price = $_POST['price'] ?? 0;
-            $stock = $_POST['stock'] ?? 0;
-            $description = $_POST['description'] ?? '';
-            $categoryID = $_POST['categoryID'] ?? null;
+    public function add()
+{
+    // 🔹 Завантажуємо список категорій ДЛЯ ФОРМИ
+    $categoryModel = new Category($this->pdo);
+    $categories = $categoryModel->getAll();
 
-            $imageUrl = 'uploads/products/default.jpg';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $name = trim($_POST['name'] ?? '');
+        $price = $_POST['price'] ?? 0;
+        $stock = $_POST['stock'] ?? 0;
+        $description = $_POST['description'] ?? '';
 
-            if (!empty($_FILES['image']['name'])) {
-                $uploadDir = 'uploads/products/';
-                if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        // ⚠️ ВАЖЛИВО: categoryId (як у формі)
+        $categoryID = $_POST['categoryId'] ?? null;
 
-                $fileName = time().'_'.basename($_FILES['image']['name']);
-                $targetFile = $uploadDir.$fileName;
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                    $imageUrl = $targetFile;
-                }
+        $imageUrl = 'uploads/products/default.jpg';
+
+        if (!empty($_FILES['image']['name'])) {
+            $uploadDir = 'uploads/products/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
             }
 
-            $product = new Product($this->pdo);
-            $product->name = $name;
-            $product->price = $price;
-            $product->stock = $stock;
-            $product->description = $description;
-            $product->categoryID = $categoryID;
-            $product->imageUrl = $imageUrl;
-            $product->save();
+            $fileName = time() . '_' . basename($_FILES['image']['name']);
+            $targetFile = $uploadDir . $fileName;
 
-            header('Location: index.php?controller=products&action=list');
-            exit;
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                $imageUrl = $targetFile;
+            }
         }
 
-        require __DIR__ . '/../views/products/add.php';
+        $product = new Product($this->pdo);
+        $product->name = $name;
+        $product->price = $price;
+        $product->stock = $stock;
+        $product->description = $description;
+        $product->categoryID = $categoryID;
+        $product->imageUrl = $imageUrl;
+
+        $product->save();
+
+        header('Location: index.php?controller=products&action=list');
+        exit;
     }
+
+    // 🔹 Показ форми
+    require __DIR__ . '/../views/products/add.php';
+}
+
 
     /* =======================
        Редагування товару
     ======================== */
-    public function edit() {
-        $id = $_GET['id'] ?? null;
-        if (!$id) die('Не вказано ID товару для редагування');
+public function edit() {
+    $id = $_GET['id'] ?? null;
+    if (!$id) die('Не вказано ID товару');
 
-        $productData = $this->productModel->getById($id);
-        if (!$productData) die('Товар не знайдено');
+    // Завантажуємо продукт як об'єкт
+    $product = $this->productModel->where('productId', $id)->first();
+    if (!$product) die('Товар не знайдено');
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'] ?? '';
-            $price = $_POST['price'] ?? 0;
-            $stock = $_POST['stock'] ?? 0;
-            $description = $_POST['description'] ?? '';
-            $categoryID = $_POST['categoryID'] ?? null;
-            $imageUrl = $productData['imageUrl'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Оновлюємо поля лише якщо передано нові значення
+        $product->name = trim($_POST['name'] ?? $product->name);
+        $product->price = $_POST['price'] ?? $product->price;
+        $product->stock = $_POST['stock'] ?? $product->stock;
+        $product->description = $_POST['description'] ?? $product->description;
 
-            if (!empty($_FILES['image']['name'])) {
-                $uploadDir = 'uploads/products/';
-                if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-
-                $fileName = time().'_'.basename($_FILES['image']['name']);
-                $targetFile = $uploadDir.$fileName;
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                    $imageUrl = $targetFile;
-                }
-            }
-
-            $product = new Product($this->pdo);
-            $product->productId = $id;
-            $product->name = $name;
-            $product->price = $price;
-            $product->stock = $stock;
-            $product->description = $description;
-            $product->categoryID = $categoryID;
-            $product->imageUrl = $imageUrl;
-            $product->save();
-
-            header('Location: index.php?controller=products&action=list');
-            exit;
+        // ✅ categoryID оновлюємо тільки якщо передано
+        if (isset($_POST['categoryId']) && $_POST['categoryId'] !== '') {
+            $product->categoryID = $_POST['categoryId'];
         }
 
-        require __DIR__ . '/../views/products/edit.php';
+        // Обробка нового зображення
+        if (!empty($_FILES['image']['name'])) {
+            $uploadDir = 'uploads/products/';
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+
+            $fileName = time() . '_' . basename($_FILES['image']['name']);
+            $targetFile = $uploadDir . $fileName;
+
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                $product->imageUrl = $targetFile;
+            }
+        }
+
+        // Викликаємо ORM update
+        $product->update();
+
+        // 🔹 Редирект після успішного оновлення
+        header('Location: index.php?controller=products&action=list');
+        exit;
     }
+
+    // Завантажуємо список категорій для форми
+    $categoryModel = new Category($this->pdo);
+    $categories = $categoryModel->getAll();
+
+    // Відображення форми
+    require __DIR__ . '/../views/products/edit.php';
+}
 
     /* =======================
        Видалення товару

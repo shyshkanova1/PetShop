@@ -22,19 +22,17 @@ class ORM {
 
     public function __set($key, $value) {
         $this->attributes[$key] = $value;
+
+        if(property_exists($this, $key)) {
+        $this->$key = $value;
+        }
     }
 
-    // ========================
-    // Додати умову WHERE
-    // ========================
     public function where($column, $value) {
         $this->wheres[] = [$column, $value];
         return $this;
     }
 
-    // ========================
-    // Отримати всі результати по WHERE
-    // ========================
     public function get() {
         $table = static::$table;
         $sql = "SELECT * FROM $table";
@@ -59,23 +57,17 @@ class ORM {
         return $results;
     }
 
-    // ========================
-    // Перший запис
-    // ========================
     public function first() {
         $results = $this->get();
         return $results[0] ?? null;
     }
 
-    // ========================
-    // Перевірка на пустий результат
-    // ========================
     public function isEmpty() {
         return empty($this->get());
     }
 
     // ========================
-    // Зберегти або оновити
+    // Save (Insert або Update)
     // ========================
     public function save() {
         $table = static::$table;
@@ -96,31 +88,7 @@ class ORM {
         }
 
         if ($isUpdate) {
-            // UPDATE
-            $fields = [];
-            $params = [];
-            foreach ($this->attributes as $key => $value) {
-                if (is_array($pk) && in_array($key, $pk)) continue;
-                if (!is_array($pk) && $key == $pk) continue;
-                $fields[] = "$key = :$key";
-                $params[":$key"] = $value;
-            }
-
-            // WHERE по ключах
-            $where = [];
-            if (is_array($pk)) {
-                foreach ($pk as $k) {
-                    $where[] = "$k = :$k";
-                    $params[":$k"] = $this->attributes[$k];
-                }
-            } else {
-                $where[] = "$pk = :$pk";
-                $params[":$pk"] = $this->attributes[$pk];
-            }
-
-            $sql = "UPDATE $table SET " . implode(", ", $fields) . " WHERE " . implode(" AND ", $where);
-            $stmt = $this->pdo->prepare($sql);
-            return $stmt->execute($params);
+            return $this->update(); // 🔹 викликаємо новий метод update
         } else {
             // INSERT
             $fields = array_keys($this->attributes);
@@ -132,12 +100,52 @@ class ORM {
             $stmt = $this->pdo->prepare($sql);
             $res = $stmt->execute($params);
 
-            // Якщо простий ключ — ставимо lastInsertId
             if (!is_array($pk)) {
                 $this->attributes[$pk] = $this->pdo->lastInsertId();
             }
             return $res;
         }
+    }
+
+    // ========================
+    // Новий метод Update
+    // ========================
+    public function update() {
+        $table = static::$table;
+        $pk = static::$primaryKey;
+
+        $params = [];
+        $fields = [];
+
+        // Визначаємо умови WHERE
+        if (is_array($pk)) {
+            $where = [];
+            foreach ($pk as $k) {
+                if (!isset($this->attributes[$k])) {
+                    throw new Exception("Неможливо оновити: не задано ключ $k");
+                }
+                $where[] = "$k = :$k";
+                $params[":$k"] = $this->attributes[$k];
+            }
+        } else {
+            if (!isset($this->attributes[$pk])) {
+                throw new Exception("Неможливо оновити: не задано ключ $pk");
+            }
+            $where = ["$pk = :id"];
+            $params[":id"] = $this->attributes[$pk];
+        }
+
+        // Формуємо SET для UPDATE
+        foreach ($this->attributes as $key => $value) {
+            if (is_array($pk) && in_array($key, $pk)) continue;
+            if (!is_array($pk) && $key == $pk) continue;
+            $fields[] = "$key = :$key";
+            $params[":$key"] = $value;
+        }
+
+        $sql = "UPDATE $table SET " . implode(", ", $fields) . " WHERE " . implode(" AND ", $where);
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($params);
     }
 
     // ========================
@@ -147,7 +155,6 @@ class ORM {
         $table = static::$table;
         $pk = static::$primaryKey;
 
-        // Якщо складний ключ
         if (is_array($pk)) {
             $where = [];
             $params = [];
@@ -164,9 +171,6 @@ class ORM {
         }
     }
 
-    // ========================
-    // Отримати всі записи
-    // ========================
     public static function all($pdo) {
         $table = static::$table;
         $stmt = $pdo->query("SELECT * FROM $table WHERE isDeleted = 0");
@@ -177,9 +181,6 @@ class ORM {
         return $results;
     }
 
-    // ========================
-    // Знайти по ключу
-    // ========================
     public static function find($pdo, $id) {
         $table = static::$table;
         $pk = static::$primaryKey;

@@ -113,53 +113,88 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 /* Відгуки */
+
+/* ====== REVIEWS WRAPPER ====== */
+.reviews-wrapper {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* ====== REVIEWS CARD ====== */
 .reviews {
-    margin-top: 40px;
-    border-top: 1px solid #e2e8f0;
-    padding-top: 25px;
+    background: #f9f9f9;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
 }
 
+/* Заголовок */
 .reviews h3 {
+    text-align: center;
+    font-size: 26px;
     color: #2f855a;
-    font-size: 22px;
+    margin-bottom: 30px;
 }
 
+/* ====== SINGLE REVIEW ====== */
 .review-item {
-    margin-bottom: 18px;
-    background: #f0fff4;
-    padding: 12px 18px;
-    border-radius: 8px;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     font-size: 16px;
+    line-height: 1.5;
 }
 
 .review-item strong {
     color: #22543d;
 }
 
-/* Додавання відгуку */
-.add-review textarea {
+/* ====== ADD REVIEW CARD ====== */
+.add-review {
+    margin-top: 35px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+/* Заголовок форми */
+.add-review h4 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #2f855a;
+}
+
+/* Форма */
+.add-review form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Поля */
+.add-review textarea,
+.add-review select {
     width: 100%;
     padding: 12px;
     border-radius: 6px;
-    border: 1px solid #c6f6d5;
-    margin-bottom: 12px;
+    border: 1px solid #cbd5e0;
     font-size: 15px;
+    margin-bottom: 15px;
 }
 
-.add-review select {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #c6f6d5;
-    margin-bottom: 12px;
-    font-size: 15px;
-}
-
+/* Кнопка */
 .add-review button {
+    display: block;
+    margin: 0 auto;
     background-color: #38a169;
     color: #fff;
     border: none;
-    padding: 12px 22px;
-    border-radius: 6px;
+    padding: 12px 26px;
+    border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
     font-size: 16px;
@@ -168,6 +203,7 @@ if (session_status() === PHP_SESSION_NONE) {
 .add-review button:hover {
     background-color: #2f855a;
 }
+
 
 /* Toast */
 .toast {

@@ -5,18 +5,8 @@ class Product extends ORM {
     protected static $table = 'Products';
     protected static $primaryKey = 'productId';
 
-    public $productId;
-    public $name;
-    public $price;
-    public $stock;
-    public $description;
-    public $categoryID;
-    public $imageUrl;
-    public $isDeleted = 0;
-    public $createdAt;
-
-    public function __construct($pdo) {
-        parent::__construct($pdo);
+    public function __construct($pdo, $attributes = []) {
+        parent::__construct($pdo, $attributes);
     }
 
     /* =====================
@@ -116,5 +106,16 @@ class Product extends ORM {
             WHERE userId = :userId AND productId = :productId
         ");
         return $stmt->execute([':userId'=>$userId, ':productId'=>$productId]);
+    }
+
+    /* =====================
+       Повертає об’єкт Product за ID
+    ====================== */
+    public function getProductObject($id) {
+        $sql = "SELECT * FROM Products WHERE productId = :id AND isDeleted = 0";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? new Product($this->pdo, $row) : null;
     }
 }
