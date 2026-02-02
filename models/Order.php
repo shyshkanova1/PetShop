@@ -40,7 +40,7 @@ class Order {
 }
 
     public function cancel($orderID, $userID) { // дозволяємо скасувати тільки своє замовлення 
-    $stmt = $this->pdo->prepare("UPDATE Orders SET status = 'Cancelled' WHERE orderID = ? AND userId = ?"); 
+    $stmt = $this->pdo->prepare("UPDATE Orders SET status = 'cancelled' WHERE orderID = ? AND userId = ?"); 
     return $stmt->execute([$orderID, $userID]); }
 
     /**
@@ -87,9 +87,25 @@ class Order {
     }
 
     public function updateStatus($orderId, $status) {
-        $stmt = $this->pdo->prepare("UPDATE Orders SET status = ? WHERE orderId = ?");
-        return $stmt->execute([$status, $orderId]);
+    $status = strtolower($status);
+
+    if (!in_array($status, $this->getAllStatuses())) {
+        throw new Exception("Invalid status: $status");
     }
+
+    $stmt = $this->pdo->prepare(
+        "UPDATE Orders SET status = ? WHERE orderId = ?"
+    );
+    $stmt->execute([$status, $orderId]);
+
+    if ($stmt->rowCount() === 0) {
+        error_log("Order status NOT updated. orderId=$orderId");
+    }
+
+    return true;
+}
+
+
 
     public function deleteOrder($orderId) {
     try {

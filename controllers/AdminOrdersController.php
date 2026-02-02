@@ -46,6 +46,7 @@ public function list() {
 
     // Підключаємо view
     
+    
     require_once __DIR__ . '/../views/orders/list.php';
 }
 
