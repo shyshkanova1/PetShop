@@ -15,13 +15,11 @@ if (session_status() === PHP_SESSION_NONE) {
         <?php foreach ($products as $product): ?>
 
             <?php
-                // === ЗОБРАЖЕННЯ ТОВАРУ ===
                 $imageUrl = !empty($product['imageUrl'])
                     ? htmlspecialchars($product['imageUrl'])
                     : 'uploads/products/default.jpg';
                     
             ?>
-
             <div class="product-card">
                 <a href="index.php?controller=products&action=view&id=<?= $product['productId'] ?>">
                     <img src="<?= $imageUrl ?>"
@@ -59,7 +57,6 @@ if (session_status() === PHP_SESSION_NONE) {
         <p>Товари не знайдені</p>
     <?php endif; ?>
 
-    <!-- Картка "Додати товар" для адміна -->
     <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
         <div class="product-card add-product-card">
             <a href="index.php?controller=products&action=add">

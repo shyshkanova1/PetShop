@@ -48,10 +48,8 @@ if (session_status() === PHP_SESSION_NONE) {
 <?php endif; ?>
 
 <style>
-/* Загальний стиль */
 h2 { text-align: center; margin-bottom: 20px; color: #333; font-family: Arial, sans-serif; }
 
-/* Порожній кошик */
 .empty-cart {
     max-width: 500px;
     margin: 40px auto;
@@ -84,10 +82,8 @@ h2 { text-align: center; margin-bottom: 20px; color: #333; font-family: Arial, s
     background-color: #43a047;
 }
 
-/* Кошик */
 .cart-container { max-width: 900px; margin: 0 auto; }
 
-/* Картка товару */
 .cart-item {
     display: flex;
     align-items: center;
@@ -104,7 +100,7 @@ h2 { text-align: center; margin-bottom: 20px; color: #333; font-family: Arial, s
 
 .cart-item {
     display: flex;
-    align-items: center; /* <-- Вирівнювання всіх елементів по вертикалі */
+    align-items: center; 
     justify-content: space-between;
     background-color: #fafafa;
     padding: 15px;
@@ -115,7 +111,7 @@ h2 { text-align: center; margin-bottom: 20px; color: #333; font-family: Arial, s
 
 .item-action {
     display: flex;
-    align-items: center; /* <-- Вирівнюємо кнопку по центру вертикально */
+    align-items: center;
     justify-content: center;
 }
 
@@ -124,15 +120,12 @@ h2 { text-align: center; margin-bottom: 20px; color: #333; font-family: Arial, s
 .item-price, .item-sum, .item-quantity { flex: 1; }
 
 
-/* Інпут кількості */
 .qty-input { width: 60px; padding: 5px; border-radius: 5px; border: 1px solid #ccc; text-align: center; }
 
-/* Кнопки */
 .btn { display: inline-block; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; border: none; cursor: pointer; transition: background-color 0.3s; }
 .btn:hover { opacity: 0.9; }
 .btn-remove { background-color: #f44336; color: #fff; }
 
-/* Кнопка оформлення замовлення */
 .cart-actions { text-align: center; margin-top: 20px; }
 .btn-checkout {
     display: inline-block;
@@ -147,7 +140,6 @@ h2 { text-align: center; margin-bottom: 20px; color: #333; font-family: Arial, s
 }
 .btn-checkout:hover { background-color: #43a047; }
 
-/* Разом */
 .cart-total {
     display: flex;
     justify-content: flex-end;

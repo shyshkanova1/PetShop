@@ -5,7 +5,6 @@ class Review extends ORM {
     protected static $table = 'Reviews';
     protected static $primaryKey = 'reviewId';
 
-    // Отримати всі відгуки для продукту з ім'ям користувача
     public static function getReviewsByProduct($pdo, $productId) {
         $sql = "
             SELECT r.*, u.name AS userName
@@ -24,7 +23,6 @@ class Review extends ORM {
         return $results;
     }
 
-    // Додати новий відгук
     public static function addReview($pdo, $productId, $userId, $rating, $comment) {
         $review = new static($pdo, [
             'productId' => $productId,
@@ -36,7 +34,6 @@ class Review extends ORM {
         return $review->save();
     }
 
-    // Видалити відгук (soft delete)
     public static function removeReview($pdo, $reviewId, $userId) {
         $sql = "UPDATE Reviews SET isDeleted = 1 WHERE reviewId = :reviewId AND userId = :userId";
         $stmt = $pdo->prepare($sql);

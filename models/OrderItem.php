@@ -5,14 +5,7 @@ class OrderItem {
     public function __construct($pdo) {
         $this->pdo = $pdo;
     }
-
-    /**
-     * Додає товар у замовлення
-     * @param int $orderId
-     * @param int $productId
-     * @param int $quantity
-     * @param float $unitPrice
-     */
+    
     public function addOrderItem($orderId, $productId, $quantity, $unitPrice) {
         $stmt = $this->pdo->prepare("
             INSERT INTO OrderItems (orderID, productID, quantity, unitPrice)
@@ -25,10 +18,7 @@ class OrderItem {
             ':unitPrice' => $unitPrice
         ]);
     }
-
-    /**
-     * Отримати всі позиції замовлення
-     */
+ 
     public function getItemsByOrderId($orderId) {
         $stmt = $this->pdo->prepare("
             SELECT oi.*, p.name AS productName

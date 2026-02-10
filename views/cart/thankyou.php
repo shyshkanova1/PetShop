@@ -1,5 +1,4 @@
 <?php
-// Перевірка, чи є змінні з контролера
 if (!isset($user, $orderedItems, $totalAmount)) {
     die("Неможливо відобразити сторінку подяки. Дані відсутні.");
 }
@@ -24,7 +23,7 @@ if (!isset($user, $orderedItems, $totalAmount)) {
     }
 
     .thankyou-container h1 {
-        color: #2f855a; /* зелений заголовок */
+        color: #2f855a;
         margin-bottom: 20px;
         font-size: 28px;
     }
@@ -66,7 +65,7 @@ if (!isset($user, $orderedItems, $totalAmount)) {
         margin-top: 30px;
         padding: 12px 30px;
         border-radius: 6px;
-        background-color: #4CAF50; /* зелений як на кошику */
+        background-color: #4CAF50; 
         color: #fff;
         text-decoration: none;
         font-size: 16px;

@@ -1,30 +1,26 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-}
-// $product, $reviews, $inWishlist, $userId приходять з контролера
-?>
+}?>
 
 <style>
-/* Основний блок продукту: збільшений, зображення зліва, інформація справа */
 .product-container {
     display: flex;
     flex-wrap: wrap;
-    max-width: 1000px; /* стало ширше */
+    max-width: 1000px; 
     margin: 50px auto;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    padding: 35px; /* трохи більше відступу */
+    padding: 35px; 
     font-family: Arial, sans-serif;
 }
 
-/* Зображення товару */
 .product-image {
-    flex: 1 1 400px;      /* трохи ширший блок */
+    flex: 1 1 400px;      
     text-align: center;
     margin-right: 40px;
-    height: 400px;         /* фіксована висота блоку */
+    height: 400px;         
     display: flex;
     justify-content: center;
     align-items: center;
@@ -32,46 +28,44 @@ if (session_status() === PHP_SESSION_NONE) {
 
 .product-image img {
     max-width: 100%;
-    max-height: 100%;      /* картинка заповнює блок */
+    max-height: 100%;      
     border-radius: 12px;
-    object-fit: contain;   /* зберігаємо пропорції, нічого не обрізаємо */
+    object-fit: contain;  
 }
 
-/* Інформація про товар */
 .product-info {
-    flex: 2 1 500px; /* ширше і більший блок */
+    flex: 2 1 500px; 
 }
 
 .product-info h2 {
     color: #2f855a;
     margin-top: 0;
     margin-bottom: 20px;
-    font-size: 28px; /* збільшено шрифт назви */
+    font-size: 28px; 
 }
 
 .product-info p {
     margin: 10px 0;
     color: #4a5568;
-    font-size: 17px; /* трохи більший шрифт для зручності */
+    font-size: 17px; 
     line-height: 1.5;
 }
 
-/* Кнопки користувача */
 .buttons {
     margin-top: 25px;
 }
 
 .buttons a, .buttons button {
     display: inline-block;
-    padding: 14px 24px; /* збільшено padding */
+    padding: 14px 24px;
     margin-right: 12px;
-    border-radius: 8px; /* трохи більший радіус */
+    border-radius: 8px; 
     font-weight: bold;
     text-decoration: none;
     cursor: pointer;
     transition: 0.2s;
     border: none;
-    font-size: 16px; /* більший шрифт */
+    font-size: 16px; 
 }
 
 .buttons a.add-cart {
@@ -92,7 +86,6 @@ if (session_status() === PHP_SESSION_NONE) {
     background-color: #38a169;
 }
 
-/* Кнопки адміна */
 .admin-buttons {
     margin-top: 20px;
     text-align: right;
@@ -112,16 +105,12 @@ if (session_status() === PHP_SESSION_NONE) {
     background-color: #c53030;
 }
 
-/* Відгуки */
-
-/* ====== REVIEWS WRAPPER ====== */
 .reviews-wrapper {
     max-width: 900px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
-/* ====== REVIEWS CARD ====== */
 .reviews {
     background: #f9f9f9;
     border-radius: 14px;
@@ -129,7 +118,6 @@ if (session_status() === PHP_SESSION_NONE) {
     box-shadow: 0 8px 20px rgba(0,0,0,0.07);
 }
 
-/* Заголовок */
 .reviews h3 {
     text-align: center;
     font-size: 26px;
@@ -137,7 +125,6 @@ if (session_status() === PHP_SESSION_NONE) {
     margin-bottom: 30px;
 }
 
-/* ====== SINGLE REVIEW ====== */
 .review-item {
     background: #ffffff;
     border-radius: 10px;
@@ -152,7 +139,6 @@ if (session_status() === PHP_SESSION_NONE) {
     color: #22543d;
 }
 
-/* ====== ADD REVIEW CARD ====== */
 .add-review {
     margin-top: 35px;
     background: #ffffff;
@@ -161,7 +147,6 @@ if (session_status() === PHP_SESSION_NONE) {
     box-shadow: 0 6px 16px rgba(0,0,0,0.06);
 }
 
-/* Заголовок форми */
 .add-review h4 {
     text-align: center;
     margin-bottom: 20px;
@@ -169,13 +154,11 @@ if (session_status() === PHP_SESSION_NONE) {
     color: #2f855a;
 }
 
-/* Форма */
 .add-review form {
     max-width: 500px;
     margin: 0 auto;
 }
 
-/* Поля */
 .add-review textarea,
 .add-review select {
     width: 100%;
@@ -186,7 +169,6 @@ if (session_status() === PHP_SESSION_NONE) {
     margin-bottom: 15px;
 }
 
-/* Кнопка */
 .add-review button {
     display: block;
     margin: 0 auto;
@@ -204,8 +186,6 @@ if (session_status() === PHP_SESSION_NONE) {
     background-color: #2f855a;
 }
 
-
-/* Toast */
 .toast {
     position: fixed;
     top: 20px;
@@ -230,14 +210,12 @@ if (session_status() === PHP_SESSION_NONE) {
 </style>
 
 <div class="product-container">
-    <!-- Зображення товару -->
     <div class="product-image">
         <img src="<?= htmlspecialchars($product['imageUrl'] ?? 'uploads/products/default.jpg') ?>" 
      alt="<?= htmlspecialchars($product['name']) ?>">
 
     </div>
 
-    <!-- Інформація про товар -->
     <div class="product-info">
         <h2><?= htmlspecialchars($product['name']) ?></h2>
         <p><strong>Ціна:</strong> <?= htmlspecialchars($product['price']) ?></p>
@@ -246,8 +224,6 @@ if (session_status() === PHP_SESSION_NONE) {
         <p><strong>Категорія:</strong> <?= htmlspecialchars($product['categoryName'] ?? 'Невідомо') ?></p>
         <p><strong>Середній рейтинг:</strong> <?= number_format($averageRating, 2) ?> / 5</p>
 
-
-        <!-- Кнопки користувача -->
         <div class="buttons">
             <a href="index.php?controller=cart&action=add&productId=<?= $product['productId'] ?>" class="add-cart">Додати в кошик</a>
 
@@ -256,7 +232,6 @@ if (session_status() === PHP_SESSION_NONE) {
             <?php endif; ?>
         </div>
 
-        <!-- Кнопки адміна -->
         <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
             <div class="admin-buttons">
                 <a href="index.php?controller=products&action=edit&id=<?= $product['productId'] ?>">Редагувати</a>
@@ -266,8 +241,6 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 </div>
 
-<!-- Відгуки -->
-<!-- Відгуки -->
 <div class="reviews">
     <h3>Відгуки</h3>
     <?php if (!empty($reviews)): ?>
@@ -276,7 +249,6 @@ if (session_status() === PHP_SESSION_NONE) {
                 <strong><?= htmlspecialchars($rev->userName) ?></strong>
                 (<?= $rev->rating ?>/5) — <?= htmlspecialchars($rev->comment) ?>
 
-                <!-- Кнопка Видалити: тільки автор або адмін -->
                 <?php if ($userId && ($userId == $rev->userId || (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'))): ?>
                     <a href="index.php?controller=review&action=remove&reviewId=<?= $rev->reviewId ?>&productId=<?= $product['productId'] ?>" 
                        class="delete-review-btn" onclick>
@@ -312,7 +284,6 @@ if (session_status() === PHP_SESSION_NONE) {
 </div>
 
 <style>
-/* Кнопка Видалити відгук */
 .delete-review-btn {
     display: inline-block;
     margin-left: 12px;
@@ -330,9 +301,6 @@ if (session_status() === PHP_SESSION_NONE) {
     background-color: #c53030;
 }
 </style>
-
-
-<!-- Toast -->
 <div id="toast" class="toast"></div>
 
 <script>

@@ -1,5 +1,4 @@
 <style>
-/* ===== Адмін-форма ===== */
 .admin-form {
     max-width: 620px;
     margin: 30px auto;
@@ -47,7 +46,6 @@
     box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
-/* ===== Кнопки ===== */
 .form-buttons {
     display: flex;
     justify-content: center;
@@ -97,7 +95,6 @@
     transform: translateY(-1px);
 }
 
-/* ===== Success message ===== */
 .success-alert {
     max-width: 620px;
     margin: 20px auto;

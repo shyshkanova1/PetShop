@@ -9,9 +9,6 @@ class Product extends ORM {
         parent::__construct($pdo, $attributes);
     }
 
-    /* =====================
-       Отримати всі товари
-    ====================== */
     public function getAll($filterName = '', $categoryId = null) {
         $sql = "
             SELECT p.*, c.name AS categoryName
@@ -36,9 +33,6 @@ class Product extends ORM {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /* =====================
-       Отримати товар по ID
-    ====================== */
     public function getById($id, $includeDeleted = false) {
         $sql = "
             SELECT p.*, c.name AS categoryName, c.description AS categoryDescription
@@ -53,9 +47,6 @@ class Product extends ORM {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /* =====================
-       Середній рейтинг
-    ====================== */
     public function getAverageRating($productId) {
         $stmt = $this->pdo->prepare("SELECT dbo.AvgRating(:productId) AS averageRating");
         $stmt->execute([':productId' => $productId]);
@@ -63,9 +54,6 @@ class Product extends ORM {
         return $result['averageRating'] ?? 0;
     }
 
-    /* =====================
-       Товари по категорії
-    ====================== */
     public function getByCategory($categoryId) {
         $sql = "
             SELECT p.*, c.name AS categoryName
@@ -79,9 +67,6 @@ class Product extends ORM {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /* =====================
-       Wishlist
-    ====================== */
     public function isInUserWishlist($productId, $userId) {
         $stmt = $this->pdo->prepare("
             SELECT COUNT(*) 
@@ -108,9 +93,6 @@ class Product extends ORM {
         return $stmt->execute([':userId'=>$userId, ':productId'=>$productId]);
     }
 
-    /* =====================
-       Повертає об’єкт Product за ID
-    ====================== */
     public function getProductObject($id) {
         $sql = "SELECT * FROM Products WHERE productId = :id AND isDeleted = 0";
         $stmt = $this->pdo->prepare($sql);

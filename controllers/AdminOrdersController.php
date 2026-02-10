@@ -13,13 +13,9 @@ class AdminOrdersController {
         $this->userModel = new User($pdo);
     }
 
-// ================================
-// Список замовлень (БЕЗ зміни БД)
-// ================================
 public function list() {
     if (session_status() === PHP_SESSION_NONE) session_start();
 
-    // Перевірка ролі адміністратора
     if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         header('Location: index.php?controller=users&action=login');
         exit;
@@ -28,32 +24,21 @@ public function list() {
     $status = $_GET['status'] ?? '';
     $userId = $_GET['userId'] ?? '';
 
-    // Отримуємо всі замовлення з фільтрацією
     $orders = $this->orderModel->getAllOrders($status, $userId);
 
-    // Отримуємо всі користувачі для фільтра
     $users = $this->userModel->getAllUsers();
 
-    // Отримуємо всі позиції кожного замовлення
     foreach ($orders as &$order) {
         $orderId = $order['orderId'];
         $order['items'] = $this->orderModel->getOrderItems($orderId);
     }
     unset($order);
 
-    // Отримуємо усі можливі статуси для select
     $statuses = $this->orderModel->getAllStatuses();
-
-    // Підключаємо view
-    
     
     require_once __DIR__ . '/../views/orders/list.php';
 }
 
-
-    // ==========================================
-    // Перерахунок сум замовлень (ПРОЦЕДУРА + TX)
-    // ==========================================
     public function recalcTotals() {
         if (session_status() === PHP_SESSION_NONE) session_start();
 
@@ -94,9 +79,6 @@ public function list() {
         exit;
     }
 
-    // ================================
-    // Оновлення статусу замовлення
-    // ================================
     public function updateStatus() {
         if (session_status() === PHP_SESSION_NONE) session_start();
 
@@ -114,9 +96,6 @@ public function list() {
         exit;
     }
 
-    // ================================
-    // Видалення замовлення
-    // ================================
     public function delete() {
         if (session_status() === PHP_SESSION_NONE) session_start();
 

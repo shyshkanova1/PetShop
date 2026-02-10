@@ -19,7 +19,6 @@ class ReviewController {
 
             if (!$productId || !$userId) die('Немає продукту або користувача для додавання відгуку');
 
-            // Додаємо через ORM
             Review::addReview($this->pdo, $productId, $userId, $rating, $comment);
 
             header("Location: index.php?controller=products&action=view&id={$productId}");

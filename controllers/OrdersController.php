@@ -21,7 +21,7 @@ class OrdersController {
             $userID = $_SESSION['user_id'];
 
             $orderModel = new Order($this->pdo);
-            $orderModel->cancel($orderID, $userID); // скасовуємо тільки своє замовлення
+            $orderModel->cancel($orderID, $userID);
         }
 
         header('Location: index.php?controller=users&action=orders');

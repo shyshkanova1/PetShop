@@ -20,7 +20,6 @@ class CartController {
         $this->userModel = new User($pdo);
     }
 
-    // Додати товар у кошик
     public function add() {
         session_start();
         $productId = $_GET['productId'] ?? null;
@@ -30,16 +29,13 @@ class CartController {
             header('Location: index.php?controller=products&action=list');
             exit;
         }
-
         $product = $this->productModel->getById($productId);
         if (!$product) {
             die("Товар не знайдено");
         }
-
         if (!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
         }
-
         if (isset($_SESSION['cart'][$productId])) {
             $_SESSION['cart'][$productId]['quantity'] += $quantity;
         } else {
@@ -50,18 +46,16 @@ class CartController {
                 'quantity' => $quantity
             ];
         }
-
         header('Location: index.php?controller=cart&action=view');
         exit;
     }
 
-    // Перегляд кошика
+    
     public function view() {
         $cart = $_SESSION['cart'] ?? [];
         require_once __DIR__ . '/../views/cart/view.php';
     }
 
-    // Видалення товару з кошика
     public function remove() {
         session_start();
         $productId = $_GET['productId'] ?? null;
@@ -72,12 +66,10 @@ class CartController {
         exit;
     }
 
-   // Оновлення кількості товарів
 public function update()
 {
     if (session_status() === PHP_SESSION_NONE) session_start();
 
-    // === AJAX-запит ===
     if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
         strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
 
@@ -87,7 +79,6 @@ public function update()
         if ($productId && isset($_SESSION['cart'][$productId])) {
             $_SESSION['cart'][$productId]['quantity'] = max(1, $quantity);
             
-            // Перераховуємо суму для цього товару та total
             $item = $_SESSION['cart'][$productId];
             $itemTotal = $item['price'] * $item['quantity'];
 
@@ -108,7 +99,6 @@ public function update()
         return;
     }
 
-    // === fallback на звичайний POST через submit ===
     if (isset($_POST['quantities']) && is_array($_POST['quantities'])) {
         foreach ($_POST['quantities'] as $productId => $qty) {
             $productId = (int)$productId;
@@ -123,12 +113,9 @@ public function update()
     exit;
 }
 
-
-   // Оформлення замовлення
 public function checkout() {
     if (session_status() === PHP_SESSION_NONE) session_start();
 
-    // Перевірка авторизації
     if (!isset($_SESSION['user_id'])) {
         header('Location: index.php?controller=auth&action=login');
         exit;
@@ -143,7 +130,6 @@ public function checkout() {
 
     $user = $this->userModel->getById($userId);
 
-    // Показуємо форму, якщо це GET
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         require_once __DIR__ . '/../views/cart/checkout.php';
         return;
@@ -156,7 +142,6 @@ public function checkout() {
     try {
         $this->pdo->beginTransaction();
 
-        // Створюємо нове замовлення
         $orderId = $this->orderModel->createOrder($userId, $shippingAddress);
 
         $totalAmount = 0;
@@ -214,20 +199,17 @@ public function checkout() {
 
         $msg = $e->getMessage();
 
-        // Недостатньо товару
         if (str_contains($msg, "INSUFFICIENT_STOCK")) {
             require_once __DIR__ . '/../views/cart/insufficient_stock.php';
             return;
         }
 
-        // Незавершене замовлення або constraint з бази
     if (str_contains($msg, "Неможливо оформити замовлення") 
         || str_contains($msg, "незавершене замовлення")) {
         require_once __DIR__ . '/../views/cart/order_incomplete.php';
         return;
     }
 
-        // Інші помилки
         die("Помилка оформлення замовлення: " . $msg);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-// models/Category.php
+
 class Category {
     private $pdo;
 

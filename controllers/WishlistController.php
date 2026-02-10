@@ -10,9 +10,6 @@ class WishlistController {
         $this->wishlist = new Wishlist($pdo);
     }
 
-    // ========================
-    // Перегляд Wishlist
-    // ========================
     public function view() {
         if (session_status() === PHP_SESSION_NONE) session_start();
         $userId = $_SESSION['user_id'] ?? null;
@@ -22,9 +19,6 @@ class WishlistController {
         require __DIR__ . '/../views/wishlist/view.php';
     }
 
-    // ========================
-    // Додати через AJAX
-    // ========================
     public function addAjax() {
     if (session_status() === PHP_SESSION_NONE) session_start();
     header('Content-Type: application/json; charset=utf-8');
@@ -51,10 +45,6 @@ class WishlistController {
     exit;
 }
 
-
-    // ========================
-    // Видалити товар
-    // ========================
     public function remove() {
         if (session_status() === PHP_SESSION_NONE) session_start();
         $userId = $_SESSION['user_id'] ?? null;

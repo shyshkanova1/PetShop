@@ -6,12 +6,6 @@ class Order {
         $this->pdo = $pdo;
     }
 
-    /**
-     * Створює нове замовлення
-     * @param int $userId
-     * @param string $shippingAddress
-     * @return int $orderId
-     */
     public function createOrder($userId, $shippingAddress) {
         $sql = "
             INSERT INTO Orders (userId, totalAmount, status, createdAt, shippingAddress)
@@ -23,29 +17,58 @@ class Order {
             ':shippingAddress' => $shippingAddress
         ]);
 
-        // Повертаємо ID щойно створеного замовлення
         return $this->pdo->lastInsertId();
     }
 
-    /**
-     * Отримати всі замовлення користувача
-     */
     public function getOrdersByUser($userId) {
-    $stmt = $this->pdo->prepare("
-        DECLARE @UserID INT = :userId;
-        EXEC dbo.GetUserOrders @UserID = @UserID;
-    ");
-    $stmt->execute([':userId' => $userId]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                o.orderID AS orderId, o.status, o.totalAmount, o.createdAt, o.shippingAddress,
+                oi.orderItemID, oi.productID, oi.quantity, oi.unitPrice,
+                p.name AS productName
+            FROM Orders o
+            LEFT JOIN OrderItems oi ON o.orderID = oi.orderID
+            LEFT JOIN Products p ON oi.productID = p.productId
+            WHERE o.userID = :userId
+            ORDER BY o.createdAt DESC, o.orderID DESC, oi.orderItemID ASC
+        ");
+        $stmt->execute([':userId' => $userId]);
+        $rawOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    public function cancel($orderID, $userID) { // дозволяємо скасувати тільки своє замовлення 
+        $orders = [];
+
+        foreach ($rawOrders as $row) {
+            $orderId = $row['orderId'];
+
+            if (!isset($orders[$orderId])) {
+                $orders[$orderId] = [
+                    'orderId' => $row['orderId'],
+                    'status' => $row['status'],
+                    'totalAmount' => $row['totalAmount'],
+                    'createdAt' => $row['createdAt'],
+                    'shippingAddress' => $row['shippingAddress'],
+                    'items' => []
+                ];
+            }
+
+            if ($row['orderItemID'] !== null) {
+                $orders[$orderId]['items'][] = [
+                    'orderItemID' => $row['orderItemID'],
+                    'productID' => $row['productID'],
+                    'productName' => $row['productName'],
+                    'quantity' => $row['quantity'],
+                    'unitPrice' => $row['unitPrice']
+                ];
+            }
+        }
+
+        return array_values($orders);
+    }
+
+    public function cancel($orderID, $userID) { 
     $stmt = $this->pdo->prepare("UPDATE Orders SET status = 'cancelled' WHERE orderID = ? AND userId = ?"); 
     return $stmt->execute([$orderID, $userID]); }
 
-    /**
-     * Отримати всі позиції конкретного замовлення
-     */
     public function getOrderItems($orderId) {
         $stmt = $this->pdo->prepare("
             SELECT oi.orderItemID, oi.orderID, oi.productID, oi.quantity, oi.unitPrice, p.name AS productName
@@ -105,17 +128,13 @@ class Order {
     return true;
 }
 
-
-
     public function deleteOrder($orderId) {
     try {
         $this->pdo->beginTransaction();
 
-        // 1. Видалити всі OrderItems для цього замовлення
         $stmt = $this->pdo->prepare("DELETE FROM OrderItems WHERE orderID = ?");
         $stmt->execute([$orderId]);
 
-        // 2. Видалити саме замовлення
         $stmt = $this->pdo->prepare("DELETE FROM Orders WHERE orderID = ?");
         $stmt->execute([$orderId]);
 
@@ -126,10 +145,5 @@ class Order {
         throw $e;
     }
 }
-
-
-    
-
-
 
 }

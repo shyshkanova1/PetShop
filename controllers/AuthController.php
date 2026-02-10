@@ -12,13 +12,11 @@ class AuthController {
     }
 
     public function login() {
-        // GET → показуємо форму
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             require __DIR__ . '/../views/auth/login.php';
             return;
         }
 
-        // POST → логін
         $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE email=?");
         $stmt->execute([$_POST['email']]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);

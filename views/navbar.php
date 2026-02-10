@@ -8,7 +8,6 @@ $categories = $categoryModel->getAll();
 ?>
 <link rel="stylesheet" href="assets/css/style.css">
 <nav class="navbar">
-    <!-- Ліва частина: логотип + пошук + контакти -->
     <div class="navbar-left">
         <a href="index.php" class="logo"> MyPetShop</a>
         
@@ -25,18 +24,14 @@ $categories = $categoryModel->getAll();
             <span>Пн-Пт 9:00-18:00</span>
         </div>
     </div>
-
-    <!-- Права частина: особистий кабінет, кошик, вихід -->
     <div class="navbar-right">
         <?php if(isset($_SESSION['user_id'])): ?>
             <a href="index.php?controller=users&action=profile" class="nav-btn">Особистий кабінет</a>
             
             <?php if($_SESSION['role'] === 'admin'): ?>
-                <!-- Пункти для адміністратора -->
                 <a href="index.php?controller=adminUsers&action=list" class="nav-btn">Список користувачів</a>
                 <a href="index.php?controller=adminOrders&action=list" class="nav-btn">Список замовлень</a>
             <?php else: ?>
-                <!-- Пункти для звичайного користувача -->
                 <a href="index.php?controller=wishlist&action=view" class="nav-btn">Wishlist</a>
                 <a href="index.php?controller=cart&action=view" class="nav-btn">Кошик</a>
             <?php endif; ?>

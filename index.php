@@ -3,36 +3,22 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ========================
-// Конфігурації
-// ========================
+
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/core/ORM_init.php';
 
-// ========================
-// Визначаємо, чи це AJAX-запит
-// ========================
 $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
           strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
-// ========================
-// При AJAX приховуємо вивід помилок
-// ========================
 if ($isAjax) {
     ini_set('display_errors', 0);
     error_reporting(0);
 }
 
-// ========================
-// Підключаємо navbar тільки для звичайних запитів
-// ========================
 if (!$isAjax) {
     require_once __DIR__ . '/views/navbar.php';
 }
 
-// ========================
-// Роутинг
-// ========================
 $controller = $_GET['controller'] ?? 'products';
 $action = $_GET['action'] ?? 'list';
 
@@ -62,14 +48,11 @@ if (!method_exists($obj, $action)) {
     }
 }
 
-// ========================
-// Виконуємо дію
-// ========================
 if ($isAjax) {
     header('Content-Type: application/json; charset=utf-8');
-    // Викликаємо метод контролера
+    
     $obj->$action();
-    exit; // дуже важливо, щоб не виводився HTML
+    exit; 
 } else {
     echo '<div class="main-content">';
     $obj->$action();

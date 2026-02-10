@@ -4,14 +4,13 @@ require_once __DIR__ . '/../models/User.php';
 
 class UsersController {
     private $userModel;
-    private $pdo; // <-- це ключово
+    private $pdo;
 
     public function __construct($pdo) {
-        $this->pdo = $pdo;      // зберігаємо PDO
+        $this->pdo = $pdo;     
         $this->userModel = new User($pdo);
     }
 
-    // === Реєстрація ===
     public function signup() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'];
@@ -21,13 +20,10 @@ class UsersController {
             $role = 'user';
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-            // Додаємо користувача
             $this->userModel->addUser($name, $email, $phone, $address, $role, $password);
 
-            // Отримуємо тільки що створеного користувача
             $user = $this->userModel->getByEmail($email);
 
-            // Створюємо сесію
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
@@ -35,7 +31,6 @@ class UsersController {
             $_SESSION['role'] = $user['role'];
             $_SESSION['user_name'] = $user['name'];
 
-            // Редірект на профайл
             header('Location: index.php?controller=users&action=profile');
             exit;
         }
@@ -43,7 +38,6 @@ class UsersController {
         require_once __DIR__ . '/../views/auth/signup.php';
     }
 
-    // === Логін ===
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
@@ -68,7 +62,6 @@ class UsersController {
         require_once __DIR__ . '/../views/auth/login.php';
     }
 
-    // === Вихід ===
     public function logout() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -79,7 +72,6 @@ class UsersController {
         exit;
     }
 
-    // === Профайл ===
     public function profile() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -90,12 +82,10 @@ class UsersController {
             exit;
         }
 
-        // Отримуємо лише потрібні поля
         $user = $this->userModel->getById($_SESSION['user_id']);
     $orders = $this->userModel->getOrdersByUser($_SESSION['user_id']);
         require_once __DIR__ . '/../views/users/profile.php';
     }
-     // === Історія замовлень ===
     public function orders() {
         if (session_status() === PHP_SESSION_NONE) session_start();
 
@@ -111,15 +101,12 @@ class UsersController {
         $orders = $orderModel->getOrdersByUser($userId);
 
         foreach ($orders as &$order) {
-            $order['items'] = $orderModel->getOrderItems($order['orderID']);
+            $order['items'] = $orderModel->getOrderItems($order['orderId']);
         }
-
+        unset($order);
         require_once __DIR__ . '/../views/users/orders.php';
     }
     
-
-
-    // Показати профіль та обробка редагування
     public function edit() {
         if(session_status() !== PHP_SESSION_ACTIVE) session_start();
 
@@ -132,7 +119,6 @@ class UsersController {
         $userModel = new User($this->pdo);
         $successMessage = '';
 
-        // Обробка POST-запиту (редагування даних)
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
@@ -141,7 +127,6 @@ class UsersController {
 
             $userModel->update($userId, $name, $email, $phone, $address);
 
-            // Оновлюємо дані в сесії
             $_SESSION['user']['name'] = $name;
             $_SESSION['user']['email'] = $email;
             $_SESSION['user']['phone'] = $phone;
@@ -152,7 +137,6 @@ class UsersController {
 
         $user = $userModel->getById($userId);
 
-        // Підключаємо view
         require_once __DIR__ . '/../views/users/profile.php';
     }
 
@@ -166,7 +150,6 @@ class UsersController {
 
     $userId = $_SESSION['user_id'];
 
-    // Перевірка незавершених замовлень
     $stmt = $this->pdo->prepare(
         "SELECT COUNT(*) as cnt 
          FROM Orders 
@@ -184,7 +167,6 @@ class UsersController {
     try {
         $this->pdo->beginTransaction();
 
-        // 1️⃣ Видаляємо всі OrderItems замовлень користувача
         $stmtOrderIds = $this->pdo->prepare("SELECT orderID FROM Orders WHERE userId = :userId");
         $stmtOrderIds->execute([':userId' => $userId]);
         $orderIds = $stmtOrderIds->fetchAll(PDO::FETCH_COLUMN);
@@ -195,25 +177,20 @@ class UsersController {
             $stmtOrderItems->execute($orderIds);
         }
 
-        // 2️⃣ Видаляємо всі Orders користувача
         $stmtOrders = $this->pdo->prepare("DELETE FROM Orders WHERE userId = :userId");
         $stmtOrders->execute([':userId' => $userId]);
 
-        // 3️⃣ Видаляємо коментарі
         $stmtComments = $this->pdo->prepare("DELETE FROM Reviews WHERE userId = :userId");
         $stmtComments->execute([':userId' => $userId]);
 
-        // 4️⃣ Видаляємо wishlist
         $stmtWishlist = $this->pdo->prepare("DELETE FROM Wishlist WHERE userId = :userId");
         $stmtWishlist->execute([':userId' => $userId]);
 
-        // 5️⃣ Видаляємо самого користувача
         $stmtUser = $this->pdo->prepare("DELETE FROM Users WHERE userId = :userId");
         $stmtUser->execute([':userId' => $userId]);
 
         $this->pdo->commit();
 
-        // Чистимо сесію
         session_unset();
         session_destroy();
 
@@ -225,9 +202,4 @@ class UsersController {
         die("Помилка видалення акаунту: " . $e->getMessage());
     }
 }
-
-
-
-
-
 }

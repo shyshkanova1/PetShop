@@ -51,7 +51,7 @@ if (session_status() === PHP_SESSION_NONE) {
 .checkout-container h2 {
     text-align: center;
     margin-bottom: 25px;
-    color: #43a047; /* зелений заголовок */
+    color: #43a047;
 }
 
 .checkout-form label {
@@ -72,7 +72,6 @@ if (session_status() === PHP_SESSION_NONE) {
     box-sizing: border-box;
 }
 
-/* Кнопки оформлення замовлення і повернення */
 .button-group {
     display: flex;
     justify-content: center;
@@ -83,7 +82,7 @@ if (session_status() === PHP_SESSION_NONE) {
 .button-group .btn-submit {
     padding: 12px 25px;
     border-radius: 6px;
-    background-color: #4CAF50; /* такий самий зелений як на кошику */
+    background-color: #4CAF50; 
     color: #fff;
     border: none;
     font-size: 16px;

@@ -10,7 +10,7 @@
 
     h1 {
         text-align: center;
-        color: #4CAF50; /* зелений */
+        color: #4CAF50;
         margin-bottom: 20px;
     }
 
@@ -36,7 +36,7 @@
     }
 
     .recalc-btn, .action-btn {
-        background-color: #4CAF50; /* зелений */
+        background-color: #4CAF50; 
         color: white;
         border: none;
         padding: 8px 16px;
@@ -70,12 +70,11 @@
         border: 1px solid #ccc;
     }
 
-    /* Табличка через диви */
     .order-table {
         display: flex;
         flex-direction: column;
         gap: 5px;
-        max-width: 1500px; /* вужча ширина */
+        max-width: 1500px; 
         margin: 0 auto;
     }
 
@@ -86,7 +85,7 @@
     }
 
     .order-header {
-        background-color: #4CAF50; /* зелений */
+        background-color: #4CAF50;
         color: white;
         font-weight: bold;
     }
@@ -99,7 +98,7 @@
     }
 
     .order-row:nth-child(even) {
-        background-color: #e8f5e9; /* світліший зелений */
+        background-color: #e8f5e9; 
     }
 
     .order-cell {
@@ -113,8 +112,8 @@
         display: inline-block;
         font-size: 16px;
         padding: 8px 16px;
-        background-color: #ef4444; /* червоний фон */
-        color: white; /* білий текст */
+        background-color: #ef4444; 
+        color: white;
         border-radius: 5px;
         font-weight: bold;
         text-decoration: none;
@@ -125,12 +124,11 @@
         color: #922b21;
     }
 
-    /* Відстань між select і кнопкою змінити у статусі */
     .status-form {
         display: flex;
-        justify-content: center; /* по центру колонки */
-        gap: 8px; /* відстань між полем і кнопкою */
-        flex-wrap: wrap; /* якщо мало місця, перенесеться на новий рядок */
+        justify-content: center; 
+        gap: 8px;
+        flex-wrap: wrap;
     }
 
 
@@ -140,16 +138,14 @@
         border: 1px solid #ccc;
     }
 
-    /* Відступ між товарами в одній клітинці */
 .order-cell > div {
-    margin-bottom: 5px; /* відстань між товарами */
+    margin-bottom: 5px; 
 }
 
 </style>
 
 <h1>Список замовлень</h1>
 
-<!-- Повідомлення -->
 <?php if (!empty($_SESSION['success_message'])): ?>
     <p class="message success"><?= $_SESSION['success_message'] ?></p>
     <?php unset($_SESSION['success_message']); ?>
@@ -160,12 +156,10 @@
     <?php unset($_SESSION['error_message']); ?>
 <?php endif; ?>
 
-<!-- Кнопка перерахунку -->
 <form method="post" action="index.php?controller=adminOrders&action=recalcTotals" style="text-align:center; margin-bottom:20px;">
     <button type="submit" class="recalc-btn">Перерахувати суми замовлень</button>
 </form>
 
-<!-- Фільтри -->
 <form method="get" action="index.php" class="filter-form">
     <input type="hidden" name="controller" value="adminOrders">
     <input type="hidden" name="action" value="list">
@@ -208,10 +202,8 @@
 
     <?php foreach ($orders as $o): ?>
         <div class="order-row">
-            <!-- Користувач -->
             <div class="order-cell"><?= htmlspecialchars($o['userName']) ?></div>
 
-            <!-- Замовлені товари -->
             <div class="order-cell">
                 <?php foreach ($o['items'] as $item): ?>
                     <div><?= htmlspecialchars($item['productName']) ?> x<?= $item['quantity'] ?></div>
@@ -220,7 +212,6 @@
 
             <div class="order-cell"><?= $o['totalAmount'] ?></div>
 
-            <!-- Статус -->
             <div class="order-cell">
                 <form method="post" action="index.php?controller=adminOrders&action=updateStatus" class="status-form">
                     <input type="hidden" name="orderId" value="<?= $o['orderId'] ?>">

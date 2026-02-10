@@ -104,14 +104,11 @@ $editing = $_GET['edit'] ?? false;
 <div class="profile-container">
     <h2>Особистий кабінет</h2>
 
-    <!-- Повідомлення успіху (відображається лише якщо $successMessage існує) -->
     <?php if (!empty($successMessage)): ?>
         <div class="success-message" id="successMessage">
             <?= htmlspecialchars($successMessage) ?>
         </div>
     <?php endif; ?>
-
-    <!-- Повідомлення помилки -->
     <?php if (!empty($_SESSION['error_message'])): ?>
         <div class="error-message" id="errorMessage">
             <?= htmlspecialchars($_SESSION['error_message']) ?>
@@ -120,7 +117,6 @@ $editing = $_GET['edit'] ?? false;
     <?php endif; ?>
 
     <?php if (!$editing): ?>
-        <!-- Перегляд даних -->
         <div class="profile-field">
             <strong>Ім'я:</strong> <?= htmlspecialchars($user['name']) ?>
         </div>
@@ -154,7 +150,6 @@ $editing = $_GET['edit'] ?? false;
         </div>
 
     <?php else: ?>
-        <!-- Редагування -->
         <form class="edit-form" action="index.php?controller=users&action=edit" method="post">
             <label>
                 Ім'я
@@ -185,13 +180,12 @@ $editing = $_GET['edit'] ?? false;
 </div>
 
 <script>
-// Анімація зникнення success-message через 4 секунди
 window.addEventListener('DOMContentLoaded', () => {
     const success = document.getElementById('successMessage');
     if (success) {
         setTimeout(() => {
             success.style.opacity = '0';
-            setTimeout(() => success.remove(), 500); // видалити з DOM після анімації
+            setTimeout(() => success.remove(), 500); 
         }, 4000);
     }
 

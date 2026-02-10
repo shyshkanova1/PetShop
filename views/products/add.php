@@ -39,10 +39,6 @@
 
 
 <style>
-/* ==========================
-   ФОРМА ДОДАВАННЯ ТОВАРУ
-========================== */
-
 .admin-add-product h2 {
     color: #4CAF50;
     font-family: Arial, sans-serif;

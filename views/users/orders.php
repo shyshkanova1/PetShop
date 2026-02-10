@@ -113,7 +113,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <?php foreach ($orders as $order): ?>
             <div class="order-card">
                 <div class="order-header">
-                    Замовлення #<?= $order['orderID'] ?> | 
+                    Замовлення #<?= $order['orderId'] ?> | 
                     <span>Статус: <?= htmlspecialchars($order['status']) ?></span> | 
                     <span>Сума: <?= $order['totalAmount'] ?></span>
                 </div>
@@ -139,7 +139,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
                 <?php if ($order['status'] !== 'cancelled'): ?>
                     <form action="index.php?controller=orders&action=cancel" method="post" style="margin-top:10px;">
-                        <input type="hidden" name="orderID" value="<?= $order['orderID'] ?>">
+                        <input type="hidden" name="orderId" value="<?= $order['orderId'] ?>">
                         <button type="submit" class="btn btn-cancel" onclick="return confirm('Ви дійсно хочете скасувати це замовлення?')">
                             Скасувати замовлення
                         </button>

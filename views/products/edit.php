@@ -1,7 +1,6 @@
 <?php if (session_status() === PHP_SESSION_NONE) session_start(); ?>
 
 <style>
-/* ===== Адмін-форма (товар) ===== */
 .admin-form {
     max-width: 620px;
     margin: 30px auto;

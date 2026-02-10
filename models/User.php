@@ -17,8 +17,7 @@ class User {
     $stmt = $this->pdo->prepare("SELECT userId, name, email, phone, address, role FROM Users WHERE userId = ?");
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
+    }
 
     public function addUser($name, $email, $phone, $address, $role, $password) {
     $sql = "INSERT INTO Users (name, email, phone, address, role, password, createdAt) 
@@ -74,14 +73,12 @@ public function edit() {
         return $stmt->execute([$name, $email, $phone, $address, $id]);
     }
 
-    // Отримати всіх користувачів
 public function getAllUsers() {
     $stmt = $this->pdo->prepare("SELECT userId, name, email, phone, address, role FROM Users ORDER BY userId ASC");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Оновлення даних користувача адміністратором
 public function updateAdmin($id, $name, $email, $phone, $address, $role) {
     $stmt = $this->pdo->prepare(
         "UPDATE Users SET name = ?, email = ?, phone = ?, address = ?, role = ? WHERE userId = ?"
@@ -93,7 +90,6 @@ public function deleteUser($userId) {
     try {
         $this->pdo->beginTransaction();
 
-        // 1. Видалити OrderItems по замовленнях користувача
         $stmt = $this->pdo->prepare("
             DELETE OI
             FROM OrderItems OI
@@ -102,19 +98,15 @@ public function deleteUser($userId) {
         ");
         $stmt->execute([$userId]);
 
-        // 2. Видалити Orders користувача
         $stmt = $this->pdo->prepare("DELETE FROM Orders WHERE userID = ?");
         $stmt->execute([$userId]);
 
-        // 3. Видалити Reviews користувача
         $stmt = $this->pdo->prepare("DELETE FROM Reviews WHERE userId = ?");
         $stmt->execute([$userId]);
 
-        // 4. Видалити записи з Wishlist
         $stmt = $this->pdo->prepare("DELETE FROM Wishlist WHERE userId = ?");
         $stmt->execute([$userId]);
 
-        // 5. Тепер можна видалити самого користувача
         $stmt = $this->pdo->prepare("DELETE FROM Users WHERE userId = ?");
         $stmt->execute([$userId]);
 
@@ -125,9 +117,5 @@ public function deleteUser($userId) {
         throw $e;
     }
 }
-
-
-
-
 
 }
