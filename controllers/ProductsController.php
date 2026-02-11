@@ -93,7 +93,7 @@ class ProductsController {
             $product->description = $_POST['description'] ?? $product->description;
 
             if (isset($_POST['categoryId']) && $_POST['categoryId'] !== '') {
-                $product->categoryID = $_POST['categoryId'];
+                $product->categoryId = $_POST['categoryId'];
             }
 
             if (!empty($_FILES['image']['name'])) {

@@ -2,8 +2,8 @@
 
 $server = "localhost";
 $database = "PetStoreDB";
-$username = "petshop_user";  // змінив з $user на $username
-$password = "PetShop123!";   // змінив з $pass на $password
+$username = "petshop_user";
+$password = "PetShop123!"; 
 
 try {
     $pdo = new PDO(

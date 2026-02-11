@@ -140,7 +140,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <?php if ($order['status'] !== 'cancelled'): ?>
                     <form action="index.php?controller=orders&action=cancel" method="post" style="margin-top:10px;">
                         <input type="hidden" name="orderId" value="<?= $order['orderId'] ?>">
-                        <button type="submit" class="btn btn-cancel" onclick="return confirm('Ви дійсно хочете скасувати це замовлення?')">
+                        <button type="submit" class="btn btn-cancel">
                             Скасувати замовлення
                         </button>
                     </form>

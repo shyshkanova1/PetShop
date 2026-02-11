@@ -1,11 +1,8 @@
 <?php
-/**
- * ORM для навчального проєкту
- * Працює через PDO
- */
+
 class ORM {
-    protected static $table;        // Таблиця
-    protected static $primaryKey;   // Primary key або масив
+    protected static $table;      
+    protected static $primaryKey; 
     protected $pdo;
     protected $attributes = [];
     protected $wheres = [];
@@ -66,14 +63,10 @@ class ORM {
         return empty($this->get());
     }
 
-    // ========================
-    // Save (Insert або Update)
-    // ========================
     public function save() {
         $table = static::$table;
         $pk = static::$primaryKey;
 
-        // Якщо ключ масив
         $isUpdate = false;
         if (is_array($pk)) {
             $isUpdate = true;
@@ -88,9 +81,8 @@ class ORM {
         }
 
         if ($isUpdate) {
-            return $this->update(); // 🔹 викликаємо новий метод update
+            return $this->update();
         } else {
-            // INSERT
             $fields = array_keys($this->attributes);
             $placeholders = array_map(fn($f) => ":$f", $fields);
             $params = [];
@@ -107,9 +99,6 @@ class ORM {
         }
     }
 
-    // ========================
-    // Новий метод Update
-    // ========================
     public function update() {
         $table = static::$table;
         $pk = static::$primaryKey;
@@ -117,7 +106,6 @@ class ORM {
         $params = [];
         $fields = [];
 
-        // Визначаємо умови WHERE
         if (is_array($pk)) {
             $where = [];
             foreach ($pk as $k) {
@@ -135,7 +123,6 @@ class ORM {
             $params[":id"] = $this->attributes[$pk];
         }
 
-        // Формуємо SET для UPDATE
         foreach ($this->attributes as $key => $value) {
             if (is_array($pk) && in_array($key, $pk)) continue;
             if (!is_array($pk) && $key == $pk) continue;
@@ -148,9 +135,6 @@ class ORM {
         return $stmt->execute($params);
     }
 
-    // ========================
-    // Soft delete
-    // ========================
     public function delete() {
         $table = static::$table;
         $pk = static::$primaryKey;

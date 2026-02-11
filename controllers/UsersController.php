@@ -108,22 +108,25 @@ class UsersController {
     }
     
     public function edit() {
-        if(session_status() !== PHP_SESSION_ACTIVE) session_start();
+    if(session_status() !== PHP_SESSION_ACTIVE) session_start();
 
-        if(!isset($_SESSION['user_id'])) {
-            header('Location: index.php?controller=users&action=login');
-            exit;
-        }
+    if(!isset($_SESSION['user_id'])) {
+        header('Location: index.php?controller=users&action=login');
+        exit;
+    }
 
-        $userId = $_SESSION['user_id'];
-        $userModel = new User($this->pdo);
-        $successMessage = '';
+    $userId = $_SESSION['user_id'];
+    $userModel = new User($this->pdo);
+    $successMessage = '';
+    $errorMessage = '';
 
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'] ?? '';
-            $email = $_POST['email'] ?? '';
-            $phone = $_POST['phone'] ?? '';
-            $address = $_POST['address'] ?? '';
+    if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $name = $_POST['name'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $phone = $_POST['phone'] ?? '';
+        $address = $_POST['address'] ?? '';
+
+        try {
 
             $userModel->update($userId, $name, $email, $phone, $address);
 
@@ -133,12 +136,22 @@ class UsersController {
             $_SESSION['user']['address'] = $address;
 
             $successMessage = "Дані оновлено успішно.";
+
+        } catch (PDOException $e) {
+
+            if (str_contains($e->getMessage(), 'chk_users_phone_length')) {
+                $errorMessage = "Некоректний номер телефону. Введіть правильний формат.";
+            } else {
+                $errorMessage = "Сталася помилка при оновленні даних.";
+            }
+
         }
-
-        $user = $userModel->getById($userId);
-
-        require_once __DIR__ . '/../views/users/profile.php';
     }
+
+    $user = $userModel->getById($userId);
+
+    require_once __DIR__ . '/../views/users/profile.php';
+}
 
     public function delete() {
     if(session_status() !== PHP_SESSION_ACTIVE) session_start();

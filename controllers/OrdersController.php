@@ -17,7 +17,7 @@ class OrdersController {
         }
 
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $orderID = $_POST['orderID'];
+            $orderID = $_POST['orderId'];
             $userID = $_SESSION['user_id'];
 
             $orderModel = new Order($this->pdo);

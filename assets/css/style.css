@@ -6,26 +6,21 @@ body {
 }
 
 
-
-
-    /* navbar.css */
 .navbar {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* всі елементи по центру вертикально */
-    padding: 15px 20px;  /* можна підкоригувати висоту navbar */
+    align-items: center; 
+    padding: 15px 20px;  
     background-color: #4CAF50;
     border-radius: 8px;
     color: white;
 }
 
-/* Ліва частина */
 .navbar-left {
     display: flex;
-    align-items: center; /* центрування всередині лівої частини */
+    align-items: center;
     gap: 20px;
 }
-/* Логотип */
 .navbar-left .logo {
     font-size: 24px;
     font-weight: bold;
@@ -33,9 +28,6 @@ body {
     text-decoration: none;
 }
 
-
-
-/* Контакти */
 .navbar-left .contact-info {
     display: flex;
     align-items: center;
@@ -44,14 +36,12 @@ body {
     gap: 10px;
 }
 
-/* Права частина */
 .navbar-right {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-/* Кнопки navbar */
 .navbar-right .nav-btn {
     color: white;
     text-decoration: none;
@@ -73,20 +63,19 @@ body {
     background-color: #c62828;
 }
 
-/* search.css */
 .search-form {
     display: flex;
-    align-items: center; /* вирівнювання wrapper по центру navbar */
-    margin: 0; /* прибираємо додаткові верхні відступи */
+    align-items: center; 
+    margin: 0; 
 }
 .search-wrapper {
     display: flex;
-    align-items: center; /* вертикальне центрування input і кнопки */
+    align-items: center; 
 }
 .search-wrapper input {
     flex: 1;
-    height: 40px;            /* задаємо висоту, щоб input тягнувся */
-    padding: 0 12px;         /* горизонтальний padding */
+    height: 40px;            
+    padding: 0 12px;        
     font-size: 14px;
     border: none;
     outline: none;
@@ -95,8 +84,8 @@ body {
 }
 
 .search-wrapper button {
-    height: 40px;           /* висота кнопки = висота input */
-    padding: 0 16px;        /* горизонтальний padding */
+    height: 40px;        
+    padding: 0 16px;   
     font-size: 14px;
     border: none;
     border-radius: 0 5px 5px 0;
@@ -111,8 +100,6 @@ body {
     background-color: #367a38;
 }
 
-
-    /* categories.css */
 .categories-bar {
     display: flex;
     flex-wrap: wrap;
@@ -138,9 +125,6 @@ body {
     transform: scale(1.05);
 }
 
-
-
-
 h3 {
     text-align: center;
     color: #333;
@@ -153,7 +137,6 @@ form label {
     color: #555;
 }
 
-/* обмежуємо глобальні стилі для форм поза navbar */
 body form:not(.search-form) input {
     width: 100%;
     padding: 10px;
@@ -161,9 +144,6 @@ body form:not(.search-form) input {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
-
-
-
 
 form button:hover {
     background-color: #45a049;
@@ -187,12 +167,6 @@ p a {
 p a:hover {
     text-decoration: underline;
 }
-
-/* Navbar - вся лінія */
-/* Navbar - вся лінія */
-/* Загальний navbar */
-
-
 
 .products-container {
     display: flex;
@@ -257,7 +231,6 @@ p a:hover {
     background-color: #45a049;
 }
 
-/* ===== Product page ===== */
 .product-page {
     display: flex;
     gap: 40px;
@@ -315,24 +288,18 @@ p a:hover {
     margin-top: 30px;
 }
 
-/* Додай в assets/css/style.css */
-
-
-
-/* Сітка для карточок */
 .wishlist-grid {
     display: flex;
-    flex-wrap: wrap;       /* дозволяє переносити елементи на наступний рядок */
-    justify-content: center; /* центр по горизонталі */
-    gap: 20px;             /* відстань між карточками */
-    max-width: 1400px;     /* обмежуємо ширину */
-    margin: 0 auto;        /* центр контейнера */
+    flex-wrap: wrap;       
+    justify-content: center; 
+    gap: 20px;       
+    max-width: 1400px;    
+    margin: 0 auto;       
     padding: 10px;
 }
 
-/* Карточка продукту */
 .productcard {
-    flex: 0 1 180px; /* мінімальна ширина 180px, росте за потреби */
+    flex: 0 1 180px; 
     border: 1px solid #ddd;
     border-radius: 12px;
     padding: 15px;
@@ -346,7 +313,6 @@ p a:hover {
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-/* Зображення продукту */
 .product-image {
     width: 100%;
     height: 150px;
@@ -355,20 +321,17 @@ p a:hover {
     margin-bottom: 10px;
 }
 
-/* Назва продукту */
 .product-name {
     font-size: 16px;
     margin: 0 0 10px 0;
 }
 
-/* Ціна */
 .product-price {
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
 }
 
-/* Кнопка видалення */
 .btn-remove {
     display: inline-block;
     padding: 6px 12px;
@@ -383,7 +346,6 @@ p a:hover {
     background-color: #e03e3e;
 }
 
-/* Кнопка повернення */
 .back-to-products {
     margin-top: 20px;
     text-align: center;
